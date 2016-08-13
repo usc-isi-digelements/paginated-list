@@ -1,0 +1,186 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../button-action/button-action.html">
+<link rel="import" href="../iron-scroll-threshold/iron-scroll-threshold.html">
+<link rel="import" href="../loading-spinner/loading-spinner.html">
+
+<!--
+A polymer web component that shows a paginated list of items.
+
+Example:
+
+        <paginated-list
+          items="[[items]]"
+          total-items="[[total]]"
+          shown-items="{{shown}}"
+          loading="[[loading]]"
+          page="{{page}}">
+        </paginated-list>
+
+Custom mixins:
+
+        --paginated-list-max-height
+
+@demo demo/index.html
+-->
+
+<dom-module id="paginated-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+      }
+
+      iron-scroll-threshold {
+        height: 100%;
+        max-height: var(--paginated-list-max-height);
+      }
+
+      .show-more {
+        margin-top: 10px;
+        text-align: center;
+      }
+    </style>
+
+    <template is="dom-if" if="[[shownItems.length]]">
+      <iron-scroll-threshold id="scrollThreshold">
+        <content></content>
+      </iron-scroll-threshold>
+    </template>
+
+    <template is="dom-if" if="[[showMore]]">
+      <div class="show-more">
+        <button-action text="[[createShowMoreButtonText(loadType)]]" click-listener="[[createGoToNextPageListener()]]"></button-action>
+      </div>
+    </template>
+
+    <loading-spinner show="[[loading]]" type="[[loadType]]"></loading-spinner>
+  </template>
+
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'paginated-list',
+
+      properties: {
+        /**
+         * The items to show in this list that are reset for each new page.
+         */
+        items: {
+          type: Array
+        },
+
+        /**
+         * The total number of items for all pages.
+         */
+        totalItems: {
+          type: Number
+        },
+
+        /**
+         * The items shown in this list that are taken from the input items.
+         */
+        shownItems: {
+          type: Array,
+          notify: true
+        },
+
+        /**
+         * The current page.
+         */
+        page: {
+          type: Number,
+          value: 1,
+          notify: true
+        },
+
+        /**
+         * Whether a query is running.
+         */
+        loading: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
+         * The type of items shown in the Loading and Show More text.
+         */
+        loadType: {
+          type: String,
+          value: 'Data'
+        },
+
+        /**
+         * Whether additional items can be shown.
+         */
+        showMore: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      observers: [
+        'moveScroll(page, shownItems)',
+        'updateShownItems(items, loading)',
+        'updateShowMore(shownItems.length, totalItems, loading)'
+      ],
+
+      /**
+       * Creates a returns the listener for the Show More button that increases the page.
+       */
+      createGoToNextPageListener: function() {
+        var self = this;
+        return {
+          onClick: function() {
+            if(self.showMore) {
+              self.set('page', self.page + 1);
+            }
+          }
+        };
+      },
+
+      /**
+       * Creates a returns the text of the Show More button.
+       */
+      createShowMoreButtonText: function(loadType) {
+        return 'Show More ' + loadType;
+      },
+
+      /**
+       * Moves the scroll to its start if the page is set to 1.
+       */
+      moveScroll: function(page) {
+        if(page === 1 && this.$$('#scrollThreshold')) {
+          this.$$('#scrollThreshold').scroll(0, 0);
+        }
+      },
+
+      /**
+       * Updates the shown items to include the given input items.
+       */
+      updateShownItems: function(items, loading) {
+        if(!loading) {
+          if(this.page === 1) {
+            this.set('shownItems', []);
+          }
+
+          var self = this;
+          items.forEach(function(item) {
+            self.push('shownItems', item);
+          });
+        }
+      },
+
+      /**
+       * Updates whether more items can be shown.
+       */
+      updateShowMore: function(totalShownItems, totalItems, loading) {
+        this.set('showMore', (!loading && totalItems > 0 && totalItems > totalShownItems));
+      }
+    });
+  })();
+  </script>
+</dom-module>
