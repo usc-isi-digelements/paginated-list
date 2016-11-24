@@ -21,27 +21,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template is="dom-bind" id="demo">
     <p>Items: [[items]]</p>
     <p>Total Items: 10</p>
-    <p>Shown Items: [[shown]]</p>
+    <p>Shown Items: [[getShownItems(page)]]</p>
     <p>Page: [[page]]</p>
-    <p>Content:  dom-repeat template of divs for items</p>
+    <p>Content: dom-repeat template of divs for shown items</p>
 
     <paginated-list
-      items="[[items]]"
-      total-items="10"
-      shown-items="{{shown}}"
-      page="{{page}}">
+      total-items="{{items.length}}"
+      page="{{page}}"
+      show-more="{{showMore}}"
+      shown-items="{{shown}}">
 
-      <template is="dom-repeat" items="[[items]]">
-        <div><span>Item [[index]]: </span><strong>[[item]]</strong></div>
+      <template is="dom-repeat" items="{{shown}}" restamp="true">
+        <div><span>Item [[itemNumber(index)]]: </span><strong>[[item]]</strong></div>
       </template>
     </paginated-list>
 
-    <p>Add a 'page' observer to change the items and update the list.</p>
+    <p>A 'page' observer is what changes the items and update the list.</p>
   </template>
   <script>
     (function(document) {
       var demo = document.querySelector('#demo');
-      demo.items = ['one', 'two'];
+      demo.showMore = true;
+      demo.shown = ['one'];
+      demo.items = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+      demo.getShownItems = function(page) {
+        var currentIndex = page - 1;
+
+        if(currentIndex) {
+          demo.push('shown', demo.items[currentIndex]);
+          demo.showMore = (demo.items.length === demo.shown.length) ? false : true;
+        }
+        return demo.shown;
+      };
+
+      demo.itemNumber = function(index) {
+        return index + 1;
+      };
     })(document);
   </script>
 </body>
