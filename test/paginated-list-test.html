@@ -141,6 +141,62 @@
         expect(component.shownItems).to.deep.equal(['item1', 'item2']);
         expect(component.showMore).to.be.true;
       });
+
+      test('iron-scroll-threshold and content tags appear when shownItems are defined', function(done) {
+        component.shownItems = ['item1', 'item2'];
+
+        flush(function() {
+          expect(component.shownItems).to.exist;
+          expect(component.$$('content')).to.exist;
+          expect(component.$$('#scrollThreshold')).to.exist;
+          expect(component.$$('#scrollThreshold').localName).to.equal('iron-scroll-threshold');
+          done();
+        });
+      });
+
+      test('iron-scroll-threshold and content tags do not appear if shownItems is not defined', function(done) {
+        component.shownItems = undefined;
+
+        flush(function() {
+          expect(component.shownItems).to.not.exist;
+          expect(component.$$('content')).to.not.exist;
+          expect(component.$$('#scrollThreshold')).to.not.exist;
+          done();
+        });
+      });
+
+      test('button-action appears if showMore is true', function(done) {
+        component.showMore = true;
+
+        flush(function() {
+          expect(component.showMore).to.be.true;
+          expect(component.$$('button-action')).to.exist;
+          expect(component.$$('.show-more')).to.exist;
+          expect(component.$$('.show-more').children[0]).to.equal(component.$$('button-action'));
+          expect(component.$$('button-action').text).to.equal(component.createShowMoreButtonText(component.loadType));
+          expect(component.$$('button-action').clickListener).to.be.an('Object');
+          expect(component.$$('button-action').clickListener.onClick).to.exist;
+          expect(component.$$('button-action').clickListener.onClick).to.be.a('Function');
+          done();
+        });
+      });
+
+      test('button-action does not appear if showMore is false', function(done) {
+        component.showMore = false;
+
+        flush(function() {
+          expect(component.showMore).to.be.false;
+          expect(component.$$('button-action')).to.not.exist;
+          expect(component.$$('.show-more')).to.not.exist;
+          done();
+        });
+      });
+
+      test('loading-spinner element exists', function() {
+        expect(component.$$('loading-spinner')).to.exist;
+        expect(component.$$('loading-spinner').show).to.equal(component.loading);
+        expect(component.$$('loading-spinner').type).to.equal(component.loadType);
+      });
     });
   </script>
 </body>
