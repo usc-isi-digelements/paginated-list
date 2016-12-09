@@ -4,21 +4,25 @@
 <link rel="import" href="../loading-spinner/loading-spinner.html">
 
 <!--
-A polymer web component that shows a paginated list of items.
+A Polymer Element showing a paginated list of items.
 
-Example:
+### Example
 
-        <paginated-list
-          items="[[items]]"
-          total-items="[[total]]"
-          shown-items="{{shown}}"
-          loading="[[loading]]"
-          page="{{page}}">
-        </paginated-list>
+    <paginated-list
+        items="[[items]]"
+        total-items="[[total]]"
+        shown-items="{{shown}}"
+        loading="[[loading]]"
+        page="{{page}}">
+    </paginated-list>
 
-Custom mixins:
+### Styling
 
-        --paginated-list-max-height
+`<paginated-list>` provides the following custom properties and mixins for styling:
+
+Custom property               | Description                | Default
+------------------------------|----------------------------|--------
+`--paginated-list-max-height` | Maximum height of the list | none
 
 @demo demo/index.html
 -->
@@ -50,7 +54,7 @@ Custom mixins:
 
     <template is="dom-if" if="[[showMore]]">
       <div class="show-more">
-        <button-action text="[[createShowMoreButtonText(loadType)]]" click-listener="[[createGoToNextPageListener()]]"></button-action>
+        <button-action text="[[_createShowMoreButtonText(loadType)]]" click-listener="[[_createGoToNextPageListener()]]"></button-action>
       </div>
     </template>
 
@@ -66,14 +70,18 @@ Custom mixins:
 
       properties: {
         /**
-         * The items to show in this list that are reset for each new page.
+         * (Required) The items to show in this list that are reset for each new page.
+         *
+         * @type {Array}
          */
         items: {
           type: Array
         },
 
         /**
-         * The total number of items for all pages.
+         * (Required) The total number of items for all pages.
+         *
+         * @type {Number}
          */
         totalItems: {
           type: Number
@@ -81,6 +89,8 @@ Custom mixins:
 
         /**
          * The items shown in this list that are taken from the input items.
+         *
+         * @type {Array}
          */
         shownItems: {
           type: Array,
@@ -89,6 +99,9 @@ Custom mixins:
 
         /**
          * The current page.
+         *
+         * @type {Number}
+         * @default 1
          */
         page: {
           type: Number,
@@ -98,6 +111,9 @@ Custom mixins:
 
         /**
          * Whether a query is running.
+         *
+         * @type {Boolean}
+         * @default false
          */
         loading: {
           type: Boolean,
@@ -107,6 +123,9 @@ Custom mixins:
 
         /**
          * The type of items shown in the Loading and Show More text.
+         *
+         * @type {String}
+         * @default 'Data'
          */
         loadType: {
           type: String,
@@ -115,6 +134,9 @@ Custom mixins:
 
         /**
          * Whether additional items can be shown.
+         *
+         * @type {Boolean}
+         * @default false
          */
         showMore: {
           type: Boolean,
@@ -123,15 +145,18 @@ Custom mixins:
       },
 
       observers: [
-        'moveScroll(page, shownItems)',
-        'updateShownItems(items, loading)',
-        'updateShowMore(shownItems.length, totalItems, loading)'
+        '_moveScroll(page, shownItems)',
+        '_updateShownItems(items, loading)',
+        '_updateShowMore(shownItems.length, totalItems, loading)'
       ],
 
       /**
        * Creates a returns the listener for the Show More button that increases the page.
+       *
+       * @return {Object}
+       * @private
        */
-      createGoToNextPageListener: function() {
+      _createGoToNextPageListener: function() {
         var self = this;
         return {
           onClick: function() {
@@ -144,15 +169,22 @@ Custom mixins:
 
       /**
        * Creates a returns the text of the Show More button.
+       *
+       * @param {String} loadType
+       * @return {String}
+       * @private
        */
-      createShowMoreButtonText: function(loadType) {
+      _createShowMoreButtonText: function(loadType) {
         return 'Show More ' + loadType;
       },
 
       /**
        * Moves the scroll to its start if the page is set to 1.
+       *
+       * @param {Number} page
+       * @private
        */
-      moveScroll: function(page) {
+      _moveScroll: function(page) {
         if(page === 1 && this.$$('#scrollThreshold')) {
           this.$$('#scrollThreshold').scroll(0, 0);
         }
@@ -160,8 +192,12 @@ Custom mixins:
 
       /**
        * Updates the shown items to include the given input items.
+       *
+       * @param {Array} items
+       * @param {Boolean} loading
+       * @private
        */
-      updateShownItems: function(items, loading) {
+      _updateShownItems: function(items, loading) {
         if(!loading) {
           if(this.page === 1) {
             this.set('shownItems', []);
@@ -176,8 +212,13 @@ Custom mixins:
 
       /**
        * Updates whether more items can be shown.
+       *
+       * @param {Number} totalShownItems
+       * @param {Number} totalItems
+       * @param {Boolean} loading
+       * @private
        */
-      updateShowMore: function(totalShownItems, totalItems, loading) {
+      _updateShowMore: function(totalShownItems, totalItems, loading) {
         this.set('showMore', (!loading && totalItems > 0 && totalItems > totalShownItems));
       }
     });

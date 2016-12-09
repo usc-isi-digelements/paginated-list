@@ -1,22 +1,25 @@
 # paginated-list
 
-A polymer web component that shows a paginated list of items.
+A Polymer Element showing a paginated list of items.
 
-Example:
+### Example
 ```html
-        <paginated-list
-          items="[[items]]"
-          total-items="[[total]]"
-          shown-items="{{shown}}"
-          loading="[[loading]]"
-          page="{{page}}">
-        </paginated-list>
+    <paginated-list
+        items="[[items]]"
+        total-items="[[total]]"
+        shown-items="{{shown}}"
+        loading="[[loading]]"
+        page="{{page}}">
+    </paginated-list>
 ```
 
-Custom mixins:
-```html
-        --paginated-list-max-height
-```
+### Styling
+
+`<paginated-list>` provides the following custom properties and mixins for styling:
+
+Custom property               | Description                | Default
+------------------------------|----------------------------|--------
+`--paginated-list-max-height` | Maximum height of the list | none
 
 ### Dependencies
 
