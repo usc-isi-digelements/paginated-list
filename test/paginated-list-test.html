@@ -16,186 +16,186 @@
 
   <script>
     suite('paginated-list tests', function() {
-      var component;
+      var element;
 
       setup(function() {
-        component = fixture('paginated-list-fixture');
+        element = fixture('paginated-list-fixture');
       });
 
       test('items and totalItems are not changed', function() {
-        component.items = ['item1', 'item2'];
-        component.totalItems = 2;
-        expect(component.items).to.deep.equal(['item1', 'item2']);
-        expect(component.totalItems).to.equal(2);
+        element.items = ['item1', 'item2'];
+        element.totalItems = 2;
+        expect(element.items).to.deep.equal(['item1', 'item2']);
+        expect(element.totalItems).to.equal(2);
       });
 
       test('loading, page, and showMore are set to defaults', function() {
-        expect(component.loading).to.be.false;
-        expect(component.page).to.equal(1);
-        expect(component.showMore).to.be.false;
+        expect(element.loading).to.be.false;
+        expect(element.page).to.equal(1);
+        expect(element.showMore).to.be.false;
       });
 
-      test('createGoToNextPageListener() does return an object', function() {
-        var listener = component.createGoToNextPageListener();
+      test('_createGoToNextPageListener() does return an object', function() {
+        var listener = element._createGoToNextPageListener();
         expect(listener).to.exist;
         expect(listener).to.be.an('Object');
         expect(listener.onClick).to.exist;
         expect(listener.onClick).to.be.a('Function');
       });
 
-      test('createGoToNextPageListener().onClick() does not increase the page if showMore is false', function() {
-        expect(component.showMore).is.false;
-        expect(component.page).to.equal(1);
-        component.createGoToNextPageListener().onClick();
-        expect(component.page).to.equal(1);
+      test('_createGoToNextPageListener().onClick() does not increase the page if showMore is false', function() {
+        expect(element.showMore).is.false;
+        expect(element.page).to.equal(1);
+        element._createGoToNextPageListener().onClick();
+        expect(element.page).to.equal(1);
       });
 
-      test('createGoToNextPageListener().onClick() does increase the page if showMore is true', function() {
-        component.showMore = true;
-        expect(component.page).to.equal(1);
-        component.createGoToNextPageListener().onClick();
-        expect(component.page).to.equal(2);
+      test('_createGoToNextPageListener().onClick() does increase the page if showMore is true', function() {
+        element.showMore = true;
+        expect(element.page).to.equal(1);
+        element._createGoToNextPageListener().onClick();
+        expect(element.page).to.equal(2);
       });
 
-      test('createShowMoreButtonText does return a string', function() {
-        expect(component.createShowMoreButtonText('type')).is.a('String');
+      test('_createShowMoreButtonText does return a string', function() {
+        expect(element._createShowMoreButtonText('type')).is.a('String');
       });
 
-      test('updateShownItems does set the shownItems', function() {
-        expect(component.shownItems).to.not.exist;
-        component.updateShownItems(['item1', 'item2'], false);
-        expect(component.shownItems).to.deep.equal(['item1', 'item2']);
+      test('_updateShownItems does set the shownItems', function() {
+        expect(element.shownItems).to.not.exist;
+        element._updateShownItems(['item1', 'item2'], false);
+        expect(element.shownItems).to.deep.equal(['item1', 'item2']);
       });
 
-      test('updateShownItems does not set the shownItems if loading', function() {
-        expect(component.shownItems).to.not.exist;
-        component.updateShownItems(['item1', 'item2'], true);
-        expect(component.shownItems).to.not.exist;
+      test('_updateShownItems does not set the shownItems if loading', function() {
+        expect(element.shownItems).to.not.exist;
+        element._updateShownItems(['item1', 'item2'], true);
+        expect(element.shownItems).to.not.exist;
       });
 
-      test('updateShownItems does reset the existing shownItems', function() {
-        component.shownItems = ['item0'];
-        component.updateShownItems(['item1', 'item2'], false);
-        expect(component.shownItems).to.deep.equal(['item1', 'item2']);
+      test('_updateShownItems does reset the existing shownItems', function() {
+        element.shownItems = ['item0'];
+        element._updateShownItems(['item1', 'item2'], false);
+        expect(element.shownItems).to.deep.equal(['item1', 'item2']);
       });
 
-      test('updateShownItems does not reset the existing shownItems if page is above one', function() {
-        component.shownItems = ['item0'];
-        component.page = 2;
-        component.updateShownItems(['item1', 'item2'], false);
-        expect(component.shownItems).to.deep.equal(['item0', 'item1', 'item2']);
+      test('_updateShownItems does not reset the existing shownItems if page is above one', function() {
+        element.shownItems = ['item0'];
+        element.page = 2;
+        element._updateShownItems(['item1', 'item2'], false);
+        expect(element.shownItems).to.deep.equal(['item0', 'item1', 'item2']);
       });
 
-      test('updateShownItems does change showMore to true', function() {
-        component.showMore = false;
-        component.totalItems = 10;
-        component.updateShownItems(['item1', 'item2'], false);
-        expect(component.showMore).to.be.true;
+      test('_updateShownItems does change showMore to true', function() {
+        element.showMore = false;
+        element.totalItems = 10;
+        element._updateShownItems(['item1', 'item2'], false);
+        expect(element.showMore).to.be.true;
       });
 
-      test('updateShownItems does change showMore to false', function() {
-        component.showMore = true;
-        component.totalItems = 2;
-        component.updateShownItems(['item1', 'item2'], false);
-        expect(component.showMore).to.be.false;
+      test('_updateShownItems does change showMore to false', function() {
+        element.showMore = true;
+        element.totalItems = 2;
+        element._updateShownItems(['item1', 'item2'], false);
+        expect(element.showMore).to.be.false;
       });
 
-      test('updateShownItems does not change showMore if loading', function() {
-        component.showMore = false;
-        component.totalItems = 10;
-        component.updateShownItems(['item1', 'item2'], true);
-        expect(component.showMore).to.be.false;
+      test('_updateShownItems does not change showMore if loading', function() {
+        element.showMore = false;
+        element.totalItems = 10;
+        element._updateShownItems(['item1', 'item2'], true);
+        expect(element.showMore).to.be.false;
       });
 
-      test('updateShowMore does change showMore to true if shownItems.length is below totalItems', function() {
-        component.showMore = false;
-        component.updateShowMore(1, 2, false);
-        expect(component.showMore).to.be.true;
+      test('_updateShowMore does change showMore to true if shownItems.length is below totalItems', function() {
+        element.showMore = false;
+        element._updateShowMore(1, 2, false);
+        expect(element.showMore).to.be.true;
       });
 
-      test('updateShowMore does change showMore to false if shownItems.length equals totalItems', function() {
-        component.showMore = true;
-        component.updateShowMore(2, 2, false);
-        expect(component.showMore).to.be.false;
+      test('_updateShowMore does change showMore to false if shownItems.length equals totalItems', function() {
+        element.showMore = true;
+        element._updateShowMore(2, 2, false);
+        expect(element.showMore).to.be.false;
       });
 
-      test('updateShowMore does not change showMore if loading', function() {
-        component.showMore = false;
-        component.updateShowMore(1, 2, true);
-        expect(component.showMore).to.be.false;
+      test('_updateShowMore does not change showMore if loading', function() {
+        element.showMore = false;
+        element._updateShowMore(1, 2, true);
+        expect(element.showMore).to.be.false;
       });
 
       test('setting loading changes showMore', function() {
-        component.shownItems = ['item1', 'item2'];
-        component.totalItems = 10;
-        component.showMore = true;
-        component.loading = true;
-        expect(component.showMore).to.be.false;
+        element.shownItems = ['item1', 'item2'];
+        element.totalItems = 10;
+        element.showMore = true;
+        element.loading = true;
+        expect(element.showMore).to.be.false;
       });
 
       test('setting items changes shownItems and showMore', function() {
-        component.showMore = false;
-        component.totalItems = 10;
-        expect(component.shownItems).to.not.exist;
-        component.items = ['item1', 'item2'];
-        expect(component.shownItems).to.deep.equal(['item1', 'item2']);
-        expect(component.showMore).to.be.true;
+        element.showMore = false;
+        element.totalItems = 10;
+        expect(element.shownItems).to.not.exist;
+        element.items = ['item1', 'item2'];
+        expect(element.shownItems).to.deep.equal(['item1', 'item2']);
+        expect(element.showMore).to.be.true;
       });
 
       test('iron-scroll-threshold and content tags appear when shownItems are defined', function(done) {
-        component.shownItems = ['item1', 'item2'];
+        element.shownItems = ['item1', 'item2'];
 
         flush(function() {
-          expect(component.shownItems).to.exist;
-          expect(component.$$('content')).to.exist;
-          expect(component.$$('#scrollThreshold')).to.exist;
-          expect(component.$$('#scrollThreshold').localName).to.equal('iron-scroll-threshold');
+          expect(element.shownItems).to.exist;
+          expect(element.$$('content')).to.exist;
+          expect(element.$$('#scrollThreshold')).to.exist;
+          expect(element.$$('#scrollThreshold').localName).to.equal('iron-scroll-threshold');
           done();
         });
       });
 
       test('iron-scroll-threshold and content tags do not appear if shownItems is not defined', function(done) {
-        component.shownItems = undefined;
+        element.shownItems = undefined;
 
         flush(function() {
-          expect(component.shownItems).to.not.exist;
-          expect(component.$$('content')).to.not.exist;
-          expect(component.$$('#scrollThreshold')).to.not.exist;
+          expect(element.shownItems).to.not.exist;
+          expect(element.$$('content')).to.not.exist;
+          expect(element.$$('#scrollThreshold')).to.not.exist;
           done();
         });
       });
 
       test('button-action appears if showMore is true', function(done) {
-        component.showMore = true;
+        element.showMore = true;
 
         flush(function() {
-          expect(component.showMore).to.be.true;
-          expect(component.$$('button-action')).to.exist;
-          expect(component.$$('.show-more')).to.exist;
-          expect(component.$$('.show-more').children[0]).to.equal(component.$$('button-action'));
-          expect(component.$$('button-action').text).to.equal(component.createShowMoreButtonText(component.loadType));
-          expect(component.$$('button-action').clickListener).to.be.an('Object');
-          expect(component.$$('button-action').clickListener.onClick).to.exist;
-          expect(component.$$('button-action').clickListener.onClick).to.be.a('Function');
+          expect(element.showMore).to.be.true;
+          expect(element.$$('button-action')).to.exist;
+          expect(element.$$('.show-more')).to.exist;
+          expect(element.$$('.show-more').children[0]).to.equal(element.$$('button-action'));
+          expect(element.$$('button-action').text).to.equal(element._createShowMoreButtonText(element.loadType));
+          expect(element.$$('button-action').clickListener).to.be.an('Object');
+          expect(element.$$('button-action').clickListener.onClick).to.exist;
+          expect(element.$$('button-action').clickListener.onClick).to.be.a('Function');
           done();
         });
       });
 
       test('button-action does not appear if showMore is false', function(done) {
-        component.showMore = false;
+        element.showMore = false;
 
         flush(function() {
-          expect(component.showMore).to.be.false;
-          expect(component.$$('button-action')).to.not.exist;
-          expect(component.$$('.show-more')).to.not.exist;
+          expect(element.showMore).to.be.false;
+          expect(element.$$('button-action')).to.not.exist;
+          expect(element.$$('.show-more')).to.not.exist;
           done();
         });
       });
 
       test('loading-spinner element exists', function() {
-        expect(component.$$('loading-spinner')).to.exist;
-        expect(component.$$('loading-spinner').show).to.equal(component.loading);
-        expect(component.$$('loading-spinner').type).to.equal(component.loadType);
+        expect(element.$$('loading-spinner')).to.exist;
+        expect(element.$$('loading-spinner').show).to.equal(element.loading);
+        expect(element.$$('loading-spinner').type).to.equal(element.loadType);
       });
     });
   </script>

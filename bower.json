@@ -1,10 +1,10 @@
 {
   "name": "paginated-list",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     "Next Century Corporation"
   ],
-  "description": "",
+  "description": "A Polymer Element showing a paginated list of items.",
   "keywords": [
     "web-component",
     "polymer"
@@ -17,13 +17,13 @@
     "/test/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0",
-    "button-action": "DigElements/button-action#^1.0.0",
-    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
-    "loading-spinner": "DigElements/loading-spinner#~1.0.0"
+    "polymer": "Polymer/polymer#^1.7.0",
+    "button-action": "DigElements/button-action#^1.0.2",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+    "loading-spinner": "DigElements/loading-spinner#~1.0.1"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "web-component-tester": "^4.0.0"
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
+    "web-component-tester": "^5.0.0"
   }
 }
