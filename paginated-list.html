@@ -55,7 +55,7 @@ Custom property               | Description                | Default
 
     <template is="dom-if" if="[[showMore]]">
       <div class="show-more">
-        <button-action text="[[_createShowMoreButtonText(loadType)]]" click-listener="[[_createGoToNextPageListener()]]"></button-action>
+        <button-action text="[[_createShowMoreButtonText(totalItems, shownItems.length, pageSize, loadType)]]" click-listener="[[_createGoToNextPageListener()]]"></button-action>
       </div>
     </template>
 
@@ -116,6 +116,19 @@ Custom property               | Description                | Default
           type: Number,
           value: 1,
           notify: true
+        },
+
+        /**
+         * (Optional)
+         *
+         * The page size (or 0 for no page size).
+         *
+         * @type {Number}
+         * @default 0
+         */
+        pageSize: {
+          type: Number,
+          value: 0
         },
 
         /**
@@ -185,12 +198,15 @@ Custom property               | Description                | Default
       /**
        * Creates a returns the text of the Show More button.
        *
+       * @param {Number} totalItems
+       * @param {Number} totalShownItems
+       * @param {Number} pageSize
        * @param {String} loadType
        * @return {String}
        * @private
        */
-      _createShowMoreButtonText: function(loadType) {
-        return 'Show More ' + loadType;
+      _createShowMoreButtonText: function(totalItems, totalShownItems, pageSize, loadType) {
+        return 'Show ' + (pageSize ? Math.min(pageSize, totalItems - totalShownItems) + ' ' : '') + 'More ' + loadType;
       },
 
       /**

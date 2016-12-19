@@ -20,6 +20,7 @@
 
       setup(function() {
         element = fixture('paginated-list-fixture');
+        element.loadType = 'Items';
       });
 
       test('items and totalItems are not changed', function() {
@@ -29,9 +30,10 @@
         expect(element.totalItems).to.equal(2);
       });
 
-      test('loading, page, and showMore are set to defaults', function() {
+      test('loading, page, pageSize, and showMore are set to defaults', function() {
         expect(element.loading).to.be.false;
         expect(element.page).to.equal(1);
+        expect(element.pageSize).to.equal(0);
         expect(element.showMore).to.be.false;
       });
 
@@ -58,7 +60,10 @@
       });
 
       test('_createShowMoreButtonText does return a string', function() {
-        expect(element._createShowMoreButtonText('type')).is.a('String');
+        expect(element._createShowMoreButtonText(10, 1, 0, 'testType')).to.equal('Show More testType');
+        expect(element._createShowMoreButtonText(10, 1, 1, 'testType')).to.equal('Show 1 More testType');
+        expect(element._createShowMoreButtonText(10, 4, 4, 'testType')).to.equal('Show 4 More testType');
+        expect(element._createShowMoreButtonText(10, 8, 4, 'testType')).to.equal('Show 2 More testType');
       });
 
       test('_updateShownItems does set the shownItems', function() {
@@ -166,6 +171,9 @@
       });
 
       test('button-action appears if showMore is true', function(done) {
+        element.shownItems = [];
+        element.totalItems = 10;
+        element.pageSize = 5;
         element.showMore = true;
 
         flush(function() {
@@ -173,7 +181,7 @@
           expect(element.$$('button-action')).to.exist;
           expect(element.$$('.show-more')).to.exist;
           expect(element.$$('.show-more').children[0]).to.equal(element.$$('button-action'));
-          expect(element.$$('button-action').text).to.equal(element._createShowMoreButtonText(element.loadType));
+          expect(element.$$('button-action').text).to.equal('Show 5 More Items');
           expect(element.$$('button-action').clickListener).to.be.an('Object');
           expect(element.$$('button-action').clickListener.onClick).to.exist;
           expect(element.$$('button-action').clickListener.onClick).to.be.a('Function');
@@ -195,7 +203,7 @@
       test('loading-spinner element exists', function() {
         expect(element.$$('loading-spinner')).to.exist;
         expect(element.$$('loading-spinner').show).to.equal(element.loading);
-        expect(element.$$('loading-spinner').type).to.equal(element.loadType);
+        expect(element.$$('loading-spinner').type).to.equal('Items');
       });
     });
   </script>
