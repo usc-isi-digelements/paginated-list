@@ -216,9 +216,16 @@ limitations under the License.
         });
       });
 
-      test('loading-spinner element exists', function() {
+      test('does have loading-spinner element', function() {
         expect(element.$$('loading-spinner')).to.exist;
-        expect(element.$$('loading-spinner').show).to.equal(element.loading);
+        expect(element.$$('loading-spinner').show).to.be.false;
+        expect(element.$$('loading-spinner').type).to.equal('Items');
+      });
+
+      test('does have loading-spinner element with show=true if loading=true', function() {
+        element.loading = true;
+        expect(element.$$('loading-spinner')).to.exist;
+        expect(element.$$('loading-spinner').show).to.be.true;
         expect(element.$$('loading-spinner').type).to.equal('Items');
       });
     });
