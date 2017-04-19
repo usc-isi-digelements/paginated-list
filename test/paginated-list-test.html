@@ -128,6 +128,45 @@ limitations under the License.
         expect(element.showMore).to.be.false;
       });
 
+      test('_updateShownItems does change shownItems exactly 2 times if page=1', function(done) {
+        var called = 0;
+        element.onShownItemsChange = function(event) {
+          ++called;
+          if(called === 1) {
+            expect(event.detail.value).to.deep.equal([]);
+          } else if(called === 2) {
+            expect(event.detail.value).to.deep.equal(['item1', 'item2', 'item3', 'item4']);
+            done();
+          } else {
+            expect.fail();
+          }
+        };
+
+        element.listen(element, 'shown-items-changed', 'onShownItemsChange');
+
+        element._updateShownItems(['item1', 'item2', 'item3', 'item4'], false);
+      });
+
+      test('_updateShownItems does change shownItems exactly 1 time if page>1', function(done) {
+        element.shownItems = ['item1', 'item2'];
+        element.page = 2;
+
+        var called = 0;
+        element.onShownItemsChange = function(event) {
+          ++called;
+          if(called === 1) {
+            expect(event.detail.value).to.deep.equal(['item1', 'item2', 'item3', 'item4']);
+            done();
+          } else {
+            expect.fail();
+          }
+        };
+
+        element.listen(element, 'shown-items-changed', 'onShownItemsChange');
+
+        element._updateShownItems(['item3', 'item4'], false);
+      });
+
       test('_updateShowMore does change showMore to true if shownItems.length is below totalItems', function() {
         element.showMore = false;
         element._updateShowMore(1, 2, false);

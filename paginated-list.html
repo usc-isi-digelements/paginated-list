@@ -248,10 +248,16 @@ Custom property               | Description                | Default
             this.set('shownItems', []);
           }
 
-          var self = this;
-          items.forEach(function(item) {
-            self.push('shownItems', item);
+          var shownItems = [];
+          this.shownItems.forEach(function(item) {
+            shownItems.push(item);
           });
+
+          items.forEach(function(item) {
+            shownItems.push(item);
+          });
+
+          this.set('shownItems', shownItems);
         }
       },
 
