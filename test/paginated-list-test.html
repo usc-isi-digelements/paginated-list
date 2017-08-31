@@ -34,9 +34,10 @@ limitations under the License.
     suite('paginated-list tests', function() {
       var element;
 
-      setup(function() {
+      setup(function(done) {
         element = fixture('paginated-list-fixture');
         element.loadType = 'Items';
+        flush(done);
       });
 
       test('items and totalItems are not changed', function() {
@@ -202,24 +203,24 @@ limitations under the License.
         expect(element.showMore).to.be.true;
       });
 
-      test('iron-scroll-threshold and content tags appear when shownItems are defined', function(done) {
+      test('iron-scroll-threshold and slot tags appear when shownItems are defined', function(done) {
         element.shownItems = ['item1', 'item2'];
 
         flush(function() {
           expect(element.shownItems).to.exist;
-          expect(element.$$('content')).to.exist;
+          expect(element.$$('slot')).to.exist;
           expect(element.$$('#scrollThreshold')).to.exist;
           expect(element.$$('#scrollThreshold').localName).to.equal('iron-scroll-threshold');
           done();
         });
       });
 
-      test('iron-scroll-threshold and content tags do not appear if shownItems is not defined', function(done) {
+      test('iron-scroll-threshold and slot tags do not appear if shownItems is not defined', function(done) {
         element.shownItems = undefined;
 
         flush(function() {
           expect(element.shownItems).to.not.exist;
-          expect(element.$$('content')).to.not.exist;
+          expect(element.$$('slot')).to.not.exist;
           expect(element.$$('#scrollThreshold')).to.not.exist;
           done();
         });

@@ -18,58 +18,80 @@ limitations under the License.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
   <link rel="import" href="../paginated-list.html">
 </head>
 
 <body unresolved>
-  <style>
-    paginated-list {
-      height: 180px;
-    }
-  </style>
+  <dom-bind id="demo">
+    <style>
+      .set-height {
+        --paginated-list-max-height: 90px;
+      }
+    </style>
 
-  <template is="dom-bind" id="demo">
-    <p>Items: [[items]]</p>
-    <p>Total Items: 10</p>
-    <p>Shown Items: [[getShownItems(page)]]</p>
-    <p>Page: [[page]]</p>
-    <p>Content: dom-repeat template of divs for shown items</p>
+    <script>
+      (function(document) {
+        var demo = document.querySelector('dom-bind');
+        demo.showMore = true;
+        demo.shown = ['one'];
+        demo.items = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 
-    <paginated-list
-      total-items="{{items.length}}"
-      page="{{page}}"
-      show-more="{{showMore}}"
-      shown-items="{{shown}}">
+        demo.getShownItems = function(page) {
+          var currentIndex = page - 1;
 
-      <template is="dom-repeat" items="{{shown}}" restamp="true">
-        <div><span>Item [[itemNumber(index)]]: </span><strong>[[item]]</strong></div>
-      </template>
-    </paginated-list>
+          if(currentIndex) {
+            demo.push('shown', demo.items[currentIndex]);
+            demo.showMore = (demo.items.length === demo.shown.length) ? false : true;
+          }
+          return demo.shown;
+        };
 
-    <p>A 'page' observer is what changes the items and update the list.</p>
-  </template>
-  <script>
-    (function(document) {
-      var demo = document.querySelector('#demo');
-      demo.showMore = true;
-      demo.shown = ['one'];
-      demo.items = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+        demo.itemNumber = function(index) {
+          return index + 1;
+        };
+      })(document);
+    </script>
 
-      demo.getShownItems = function(page) {
-        var currentIndex = page - 1;
+    <template is="dom-bind">
+      <p>========== DEMO 1 ==========</p>
 
-        if(currentIndex) {
-          demo.push('shown', demo.items[currentIndex]);
-          demo.showMore = (demo.items.length === demo.shown.length) ? false : true;
-        }
-        return demo.shown;
-      };
+      <p>Shown Items: []</p>
+      <p>Total Items: 0</p>
+      <p>Begin List</p>
 
-      demo.itemNumber = function(index) {
-        return index + 1;
-      };
-    })(document);
-  </script>
+      <paginated-list
+        total-items="0"
+        shown-items='[]'>
+      </paginated-list>
+
+      <p>End List</p>
+
+      <p>========== DEMO 2 ==========</p>
+
+      <p>Items: [[[items]]]</p>
+      <p>Total Items: 10</p>
+      <p>Shown Items: [[getShownItems(page)]]</p>
+      <p>Page: [[page]]</p>
+      <p>--paginated-list-max-height: 90px</p>
+      <p>Begin List</p>
+
+      <paginated-list
+        class="set-height"
+        total-items="{{items.length}}"
+        page="{{page}}"
+        show-more="{{showMore}}"
+        shown-items="{{shown}}">
+
+        <template is="dom-repeat" items="{{shown}}" restamp="true">
+          <div><span>Item [[itemNumber(index)]]: </span><strong>[[item]]</strong></div>
+        </template>
+      </paginated-list>
+
+      <p>End List</p>
+
+      <p>A 'page' observer is what changes the items and update the list.</p>
+    </template>
+  </dom-bind>
 </body>
 </html>

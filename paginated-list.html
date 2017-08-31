@@ -1,7 +1,24 @@
+<!--
+Copyright 2017 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../button-action/button-action.html">
 <link rel="import" href="../iron-scroll-threshold/iron-scroll-threshold.html">
 <link rel="import" href="../loading-spinner/loading-spinner.html">
+<link rel="import" href="../lodash-import/lodash.html">
 
 <!--
 A Polymer Element showing a paginated list of items.
@@ -52,7 +69,10 @@ Custom property               | Description                | Default
 
     <template is="dom-if" if="[[shownItems.length]]">
       <iron-scroll-threshold id="scrollThreshold">
-        <content></content>
+        <!-- The second template is needed to make it work (and avoid vague error messages). -->
+        <template is="dom-if" if="[[shownItems.length]]">
+          <slot></slot>
+        </template>
       </iron-scroll-threshold>
     </template>
 
@@ -103,8 +123,8 @@ Custom property               | Description                | Default
          * @type {Array}
          */
         shownItems: {
-          type: Array,
-          notify: true
+          notify: true,
+          type: Array
         },
 
         /**
@@ -116,9 +136,9 @@ Custom property               | Description                | Default
          * @default 1
          */
         page: {
+          notify: true,
           type: Number,
-          value: 1,
-          notify: true
+          value: 1
         },
 
         /**
@@ -143,9 +163,9 @@ Custom property               | Description                | Default
          * @default false
          */
         loading: {
+          notify: true,
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
 
         /**
@@ -209,6 +229,9 @@ Custom property               | Description                | Default
        * @private
        */
       _createShowMoreButtonText: function(totalItems, totalShownItems, pageSize, loadType) {
+        if(_.isUndefined(totalItems) || _.isUndefined(totalShownItems)) {
+          return undefined;
+        }
         return 'Show ' + (pageSize ? Math.min(pageSize, totalItems - totalShownItems) + ' ' : '') + 'More ' + loadType;
       },
 
@@ -243,7 +266,7 @@ Custom property               | Description                | Default
        * @private
        */
       _updateShownItems: function(items, loading) {
-        if(!loading) {
+        if(items && !loading) {
           if(this.page === 1) {
             this.set('shownItems', []);
           }
@@ -270,6 +293,9 @@ Custom property               | Description                | Default
        * @private
        */
       _updateShowMore: function(totalShownItems, totalItems, loading) {
+        if(_.isUndefined(totalShownItems) || _.isUndefined(totalItems)) {
+          return;
+        }
         this.set('showMore', (!loading && totalItems > 0 && totalItems > totalShownItems));
       }
     });
