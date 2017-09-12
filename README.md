@@ -17,9 +17,12 @@ A Polymer Element showing a paginated list of items.
 
 `<paginated-list>` provides the following custom properties and mixins for styling:
 
-Custom property               | Description                | Default
-------------------------------|----------------------------|--------
-`--paginated-list-max-height` | Maximum height of the list | none
+Custom property                     | Description                                | Default
+------------------------------------|--------------------------------------------|--------
+`--paginated-list-loading-spinner`  | Mixin applied to the loading-spinner       | none
+`--paginated-list-max-height`       | Maximum height of the list                 | none
+`--paginated-list-scroll-threshold` | Mixin applied to the iron-scroll-threshold | none
+`--paginated-list-show-more-button` | Mixin applied to the show more button      | none
 
 ### Dependencies
 
