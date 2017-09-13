@@ -303,6 +303,7 @@ Custom property                     | Description                               
        */
       _updateShowMore: function(totalShownItems, totalItems, loading) {
         if(_.isUndefined(totalShownItems) || _.isUndefined(totalItems)) {
+          this.set('showMore', false);
           return;
         }
         this.set('showMore', (!loading && totalItems > 0 && totalItems > totalShownItems));

@@ -180,6 +180,18 @@ limitations under the License.
         expect(element.showMore).to.be.false;
       });
 
+      test('_updateShowMore does change showMore to false if shownItems is undefined', function() {
+        element.showMore = true;
+        element._updateShowMore();
+        expect(element.showMore).to.be.false;
+      });
+
+      test('_updateShowMore does change showMore to false if totalItems is undefined', function() {
+        element.showMore = true;
+        element._updateShowMore(2);
+        expect(element.showMore).to.be.false;
+      });
+
       test('_updateShowMore does not change showMore if loading', function() {
         element.showMore = false;
         element._updateShowMore(1, 2, true);
