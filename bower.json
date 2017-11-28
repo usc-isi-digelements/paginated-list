@@ -1,7 +1,7 @@
 {
   "name": "paginated-list",
   "description": "A Polymer Element showing a paginated list of items.",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -16,9 +16,9 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "button-action": "DigElements/button-action#^2.0.0",
+    "button-action": "DigElements/button-action#2.0.1",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^2.0.0",
-    "loading-spinner": "DigElements/loading-spinner#^2.0.0",
+    "loading-spinner": "DigElements/loading-spinner#2.0.0",
     "lodash-import": "DigElements/lodash-import#~1.0.1"
   },
   "devDependencies": {
