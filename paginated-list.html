@@ -62,8 +62,10 @@ Custom property                     | Description                               
       }
 
       loading-spinner {
-        padding: 10px;
-        @apply --paginated-list-loading-spinner;
+        --loading-spinner-mixin: {
+          padding: 15px 10px;
+          @apply --paginated-list-loading-spinner;
+        };
       }
 
       .hide {
@@ -92,7 +94,7 @@ Custom property                     | Description                               
       </div>
     </template>
 
-    <loading-spinner class$="[[_hideLoadingSpinner(loading)]]" show="[[loading]]" type="[[loadType]]"></loading-spinner>
+    <loading-spinner show="[[loading]]" type="[[loadType]]"></loading-spinner>
   </template>
 
   <script>
@@ -243,17 +245,6 @@ Custom property                     | Description                               
           return undefined;
         }
         return 'Show ' + (pageSize ? Math.min(pageSize, totalItems - totalShownItems) + ' ' : '') + 'More ' + loadType;
-      },
-
-      /**
-       * Returns the style class to hide the loading spinner if needed.
-       *
-       * @param {Boolean} loading
-       * @return {String}
-       * @private
-       */
-      _hideLoadingSpinner: function(loading) {
-        return loading ? '' : 'hide';
       },
 
       /**
