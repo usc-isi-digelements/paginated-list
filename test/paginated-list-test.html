@@ -84,15 +84,15 @@ limitations under the License.
       });
 
       test('_updateShownItems does set the shownItems', function() {
-        expect(element.shownItems).to.not.exist;
+        expect(element.shownItems).to.deep.equal([]);
         element._updateShownItems(['item1', 'item2'], false);
         expect(element.shownItems).to.deep.equal(['item1', 'item2']);
       });
 
       test('_updateShownItems does not set the shownItems if loading', function() {
-        expect(element.shownItems).to.not.exist;
+        expect(element.shownItems).to.deep.equal([]);
         element._updateShownItems(['item1', 'item2'], true);
-        expect(element.shownItems).to.not.exist;
+        expect(element.shownItems).to.deep.equal([]);
       });
 
       test('_updateShownItems does reset the existing shownItems', function() {
@@ -124,7 +124,7 @@ limitations under the License.
 
       test('_updateShownItems does not change showMore if loading', function() {
         element.showMore = false;
-        element.totalItems = 10;
+        element.totalItems = 0;
         element._updateShownItems(['item1', 'item2'], true);
         expect(element.showMore).to.be.false;
       });
@@ -209,7 +209,7 @@ limitations under the License.
       test('setting items changes shownItems and showMore', function() {
         element.showMore = false;
         element.totalItems = 10;
-        expect(element.shownItems).to.not.exist;
+        expect(element.shownItems).to.deep.equal([]);
         element.items = ['item1', 'item2'];
         expect(element.shownItems).to.deep.equal(['item1', 'item2']);
         expect(element.showMore).to.be.true;

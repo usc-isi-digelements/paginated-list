@@ -209,6 +209,7 @@ Custom property                     | Description                               
 
       observers: [
         '_moveScroll(page, shownItems)',
+        '_resetShownItems(page)',
         '_updateShownItems(items, loading)',
         '_updateShowMore(shownItems.length, totalItems, loading)'
       ],
@@ -260,6 +261,19 @@ Custom property                     | Description                               
       },
 
       /**
+       * Resets the shown items whenever the page is reset.
+       *
+       * @param {Number} page
+       * @private
+       */
+      _resetShownItems: function(page) {
+        // Redundancy needed for oddly ordered observable events.
+        if(page === 1) {
+          this.set('shownItems', []);
+        }
+      },
+
+      /**
        * Updates the shown items to include the given input items.
        *
        * @param {Array} items
@@ -268,18 +282,16 @@ Custom property                     | Description                               
        */
       _updateShownItems: function(items, loading) {
         if(items && !loading) {
+          // Redundancy needed for oddly ordered observable events.
           if(this.page === 1) {
             this.set('shownItems', []);
           }
 
-          var shownItems = [];
-          this.shownItems.forEach(function(item) {
-            shownItems.push(item);
-          });
-
-          items.forEach(function(item) {
-            shownItems.push(item);
-          });
+          var shownItems = (this.shownItems || []).map(function(item) {
+            return item;
+          }).concat(items.map(function(item) {
+            return item;
+          }));
 
           this.set('shownItems', shownItems);
         }

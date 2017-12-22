@@ -1,7 +1,7 @@
 {
   "name": "paginated-list",
   "description": "A Polymer Element showing a paginated list of items.",
-  "version": "2.2.4",
+  "version": "2.3.0",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
