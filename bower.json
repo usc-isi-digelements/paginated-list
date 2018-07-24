@@ -16,9 +16,9 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "button-action": "usc-isi-digelements/button-action#2.0.4",
+    "button-action": "usc-isi-digelements/button-action#^2.0.4",
     "iron-scroll-threshold": "PolymerElements/iron-scroll-threshold#^2.0.0",
-    "loading-spinner": "usc-isi-digelements/loading-spinner#2.0.1",
+    "loading-spinner": "usc-isi-digelements/loading-spinner#^2.0.1",
     "lodash-import": "usc-isi-digelements/lodash-import#~1.0.1"
   },
   "devDependencies": {
