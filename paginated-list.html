@@ -77,6 +77,18 @@ Custom property                     | Description                               
         text-align: center;
         @apply --paginated-list-show-more-button;
       }
+
+      .slideUp {
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
+        transition: transform .5s ease-out;
+      }
+
+      .slideDown {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        transition: transform .5s ease-out;
+      }
     </style>
 
     <template is="dom-if" if="[[shownItems.length]]">
@@ -99,220 +111,248 @@ Custom property                     | Description                               
 
   <script>
   (function() {
-    'use strict';
+  'use strict';
 
-    Polymer({
-      is: 'paginated-list',
+  Polymer({
+    is: 'paginated-list',
 
-      properties: {
-        /**
-         * (Required)
-         *
-         * The items to show in this list that are reset for each new page.
-         *
-         * @type {Array}
-         */
-        items: {
-          type: Array
-        },
-
-        /**
-         * (Required)
-         *
-         * The total number of items for all pages.
-         *
-         * @type {Number}
-         */
-        totalItems: {
-          type: Number
-        },
-
-        /**
-         * (Output)
-         *
-         * The items shown in this list that are taken from the input items.
-         *
-         * @type {Array}
-         */
-        shownItems: {
-          notify: true,
-          type: Array
-        },
-
-        /**
-         * (Optional|Output)
-         *
-         * The current page.
-         *
-         * @type {Number}
-         * @default 1
-         */
-        page: {
-          notify: true,
-          type: Number,
-          value: 1
-        },
-
-        /**
-         * (Optional)
-         *
-         * The page size (or 0 for no page size).
-         *
-         * @type {Number}
-         * @default 0
-         */
-        pageSize: {
-          type: Number,
-          value: 0
-        },
-
-        /**
-         * (Optional)
-         *
-         * Whether a query is running.
-         *
-         * @type {Boolean}
-         * @default false
-         */
-        loading: {
-          notify: true,
-          type: Boolean,
-          value: false
-        },
-
-        /**
-         * (Optional)
-         *
-         * The type of items shown in the Loading and Show More text.
-         *
-         * @type {String}
-         * @default 'Data'
-         */
-        loadType: {
-          type: String,
-          value: 'Data'
-        },
-
-        /**
-         * (Optional)
-         *
-         * Whether additional items can be shown.
-         *
-         * @type {Boolean}
-         * @default false
-         */
-        showMore: {
-          type: Boolean,
-          value: false
-        }
+    properties: {
+      /**
+       * (Required)
+       *
+       * The items to show in this list that are reset for each new page.
+       *
+       * @type {Array}
+       */
+      items: {
+        type: Array
       },
 
-      observers: [
-        '_moveScroll(page, shownItems)',
-        '_resetShownItems(page)',
-        '_updateShownItems(items, loading)',
-        '_updateShowMore(shownItems.length, totalItems, loading)'
-      ],
+      /**
+       * (Required)
+       *
+       * The total number of items for all pages.
+       *
+       * @type {Number}
+       */
+      totalItems: {
+        type: Number
+      },
 
       /**
-       * Creates a returns the listener for the Show More button that increases the page.
+       * (Output)
        *
-       * @return {Object}
-       * @private
+       * The items shown in this list that are taken from the input items.
+       *
+       * @type {Array}
        */
-      _createGoToNextPageListener: function() {
-        var self = this;
-        return {
-          onClick: function() {
-            if(self.showMore) {
-              self.set('page', self.page + 1);
-            }
+      shownItems: {
+        notify: true,
+        type: Array
+      },
+
+      /**
+       * (Optional|Output)
+       *
+       * The current page.
+       *
+       * @type {Number}
+       * @default 1
+       */
+      page: {
+        notify: true,
+        type: Number,
+        value: 1
+      },
+
+      /**
+       * (Optional)
+       *
+       * The page size (or 0 for no page size).
+       *
+       * @type {Number}
+       * @default 0
+       */
+      pageSize: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * (Optional)
+       *
+       * Whether a query is running.
+       *
+       * @type {Boolean}
+       * @default false
+       */
+      loading: {
+        notify: true,
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * (Optional)
+       *
+       * The type of items shown in the Loading and Show More text.
+       *
+       * @type {String}
+       * @default 'Data'
+       */
+      loadType: {
+        type: String,
+        value: 'Data'
+      },
+
+      /**
+       * (Optional)
+       *
+       * Whether additional items can be shown.
+       *
+       * @type {Boolean}
+       * @default false
+       */
+      showMore: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    observers: [
+      '_moveScroll(page, shownItems)',
+      '_resetShownItems(page)',
+      '_updateShownItems(items, loading)',
+      '_updateShowMore(shownItems.length, totalItems, loading)'
+    ],
+
+    /**
+     * Creates a returns the listener for the Show More button that increases the page.
+     *
+     * @return {Object}
+     * @private
+     */
+    _createGoToNextPageListener: function() {
+      var self = this;
+      return {
+        onClick: function() {
+          if (self.showMore) {
+            self.set('page', self.page + 1);
           }
-        };
-      },
-
-      /**
-       * Creates a returns the text of the Show More button.
-       *
-       * @param {Number} totalItems
-       * @param {Number} totalShownItems
-       * @param {Number} pageSize
-       * @param {String} loadType
-       * @return {String}
-       * @private
-       */
-      _createShowMoreButtonText: function(totalItems, totalShownItems, pageSize, loadType) {
-        if(_.isUndefined(totalItems) || _.isUndefined(totalShownItems)) {
-          return undefined;
         }
-        return 'Show ' + (pageSize ? Math.min(pageSize, totalItems - totalShownItems) + ' ' : '') + 'More ' + loadType;
-      },
+      };
+    },
 
-      /**
-       * Moves the scroll to its start if the page is set to 1.
-       *
-       * @param {Number} page
-       * @private
-       */
-      _moveScroll: function(page) {
-        if(page === 1 && this.$$('#scrollThreshold')) {
-          this.$$('#scrollThreshold').scroll(0, 0);
-        }
-      },
+    /**
+     * Creates a returns the text of the Show More button.
+     *
+     * @param {Number} totalItems
+     * @param {Number} totalShownItems
+     * @param {Number} pageSize
+     * @param {String} loadType
+     * @return {String}
+     * @private
+     */
+    _createShowMoreButtonText: function(
+      totalItems,
+      totalShownItems,
+      pageSize,
+      loadType
+    ) {
+      if (_.isUndefined(totalItems) || _.isUndefined(totalShownItems)) {
+        return undefined;
+      }
+      return (
+        'Show ' +
+        (pageSize
+          ? Math.min(pageSize, totalItems - totalShownItems) + ' '
+          : '') +
+        'More ' +
+        loadType
+      );
+    },
 
-      /**
-       * Resets the shown items whenever the page is reset.
-       *
-       * @param {Number} page
-       * @private
-       */
-      _resetShownItems: function(page) {
+    /**
+     * Moves the scroll to its start if the page is set to 1.
+     *
+     * @param {Number} page
+     * @private
+     */
+    _moveScroll: function(page) {
+      console.log('this.$$', this.$$('#searchTimeline'));
+      var timeline = document.getElementById('searchTimeline');
+      if (page === 1 && this.$$('#scrollThreshold')) {
+        this.$$('#scrollThreshold').scroll(0, 0);
+      }
+      if (this.$$('#searchTimeline') && this.$$('#scrollThreshold')) {
+        timeline.classList.remove('slideUp');
+        timeline.classList.add('slideDown');
+      } else {
+        timeline.classList.remove('slideDown');
+        timeline.classList.add('slideUp');
+      }
+    },
+
+    /**
+     * Resets the shown items whenever the page is reset.
+     *
+     * @param {Number} page
+     * @private
+     */
+    _resetShownItems: function(page) {
+      // Redundancy needed for oddly ordered observable events.
+      if (page === 1) {
+        this.set('shownItems', []);
+      }
+    },
+
+    /**
+     * Updates the shown items to include the given input items.
+     *
+     * @param {Array} items
+     * @param {Boolean} loading
+     * @private
+     */
+    _updateShownItems: function(items, loading) {
+      if (items && !loading) {
         // Redundancy needed for oddly ordered observable events.
-        if(page === 1) {
+        if (this.page === 1) {
           this.set('shownItems', []);
         }
-      },
 
-      /**
-       * Updates the shown items to include the given input items.
-       *
-       * @param {Array} items
-       * @param {Boolean} loading
-       * @private
-       */
-      _updateShownItems: function(items, loading) {
-        if(items && !loading) {
-          // Redundancy needed for oddly ordered observable events.
-          if(this.page === 1) {
-            this.set('shownItems', []);
-          }
-
-          var shownItems = (this.shownItems || []).map(function(item) {
+        var shownItems = (this.shownItems || [])
+          .map(function(item) {
             return item;
-          }).concat(items.map(function(item) {
-            return item;
-          }));
+          })
+          .concat(
+            items.map(function(item) {
+              return item;
+            })
+          );
 
-          this.set('shownItems', shownItems);
-        }
-      },
-
-      /**
-       * Updates whether more items can be shown.
-       *
-       * @param {Number} totalShownItems
-       * @param {Number} totalItems
-       * @param {Boolean} loading
-       * @private
-       */
-      _updateShowMore: function(totalShownItems, totalItems, loading) {
-        if(_.isUndefined(totalShownItems) || _.isUndefined(totalItems)) {
-          this.set('showMore', false);
-          return;
-        }
-        this.set('showMore', (!loading && totalItems > 0 && totalItems > totalShownItems));
+        this.set('shownItems', shownItems);
       }
-    });
-  })();
-  </script>
+    },
+
+    /**
+     * Updates whether more items can be shown.
+     *
+     * @param {Number} totalShownItems
+     * @param {Number} totalItems
+     * @param {Boolean} loading
+     * @private
+     */
+    _updateShowMore: function(totalShownItems, totalItems, loading) {
+      if (_.isUndefined(totalShownItems) || _.isUndefined(totalItems)) {
+        this.set('showMore', false);
+        return;
+      }
+      this.set(
+        'showMore',
+        !loading && totalItems > 0 && totalItems > totalShownItems
+      );
+    }
+  });
+})();
+</script>
 </dom-module>
