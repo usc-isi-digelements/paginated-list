@@ -279,12 +279,13 @@ Custom property                     | Description                               
      * @private
      */
     _moveScroll: function(page) {
-      console.log('this.$$', this.$$('#searchTimeline'));
       var timeline = document.getElementById('searchTimeline');
+      console.log('this.$$', timeline);
+
       if (page === 1 && this.$$('#scrollThreshold')) {
         this.$$('#scrollThreshold').scroll(0, 0);
       }
-      if (this.$$('#searchTimeline') && this.$$('#scrollThreshold')) {
+      if (timeline && this.$$('#scrollThreshold')) {
         timeline.classList.remove('slideUp');
         timeline.classList.add('slideDown');
       } else {
