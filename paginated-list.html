@@ -1,12 +1,9 @@
 <!--
 Copyright 2017 Next Century Corporation
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +19,6 @@ limitations under the License.
 
 <!--
 A Polymer Element showing a paginated list of items.
-
 ### Example
 ```html
 <paginated-list
@@ -33,18 +29,14 @@ A Polymer Element showing a paginated list of items.
   page="{{page}}">
 </paginated-list>
 ```
-
 ### Styling
-
 `<paginated-list>` provides the following custom properties and mixins for styling:
-
 Custom property                     | Description                                | Default
 ------------------------------------|--------------------------------------------|--------
 `--paginated-list-loading-spinner`  | Mixin applied to the loading-spinner       | none
 `--paginated-list-max-height`       | Maximum height of the list                 | none
 `--paginated-list-scroll-threshold` | Mixin applied to the iron-scroll-threshold | none
 `--paginated-list-show-more-button` | Mixin applied to the show more button      | none
-
 @demo demo/index.html
 -->
 
@@ -54,40 +46,24 @@ Custom property                     | Description                               
       :host {
         display: block;
       }
-
       iron-scroll-threshold {
         height: 100%;
         max-height: var(--paginated-list-max-height);
         @apply --paginated-list-scroll-threshold;
       }
-
       loading-spinner {
         --loading-spinner-mixin: {
           padding: 15px 10px;
           @apply --paginated-list-loading-spinner;
         };
       }
-
       .hide {
         display: none;
       }
-
       .show-more {
         padding: 10px;
         text-align: center;
         @apply --paginated-list-show-more-button;
-      }
-
-      .slideUp {
-        -webkit-transform: translateY(-100px);
-        transform: translateY(-100px);
-        transition: transform .5s ease-out;
-      }
-
-      .slideDown {
-        -webkit-transform: translateY(0);
-        transform: translateY(0);
-        transition: transform .5s ease-out;
       }
     </style>
 
@@ -112,10 +88,8 @@ Custom property                     | Description                               
   <script>
   (function() {
   'use strict';
-
   Polymer({
     is: 'paginated-list',
-
     properties: {
       /**
        * (Required)
@@ -127,7 +101,6 @@ Custom property                     | Description                               
       items: {
         type: Array
       },
-
       /**
        * (Required)
        *
@@ -138,7 +111,6 @@ Custom property                     | Description                               
       totalItems: {
         type: Number
       },
-
       /**
        * (Output)
        *
@@ -150,7 +122,6 @@ Custom property                     | Description                               
         notify: true,
         type: Array
       },
-
       /**
        * (Optional|Output)
        *
@@ -164,7 +135,6 @@ Custom property                     | Description                               
         type: Number,
         value: 1
       },
-
       /**
        * (Optional)
        *
@@ -177,7 +147,6 @@ Custom property                     | Description                               
         type: Number,
         value: 0
       },
-
       /**
        * (Optional)
        *
@@ -191,7 +160,6 @@ Custom property                     | Description                               
         type: Boolean,
         value: false
       },
-
       /**
        * (Optional)
        *
@@ -204,7 +172,6 @@ Custom property                     | Description                               
         type: String,
         value: 'Data'
       },
-
       /**
        * (Optional)
        *
@@ -218,14 +185,12 @@ Custom property                     | Description                               
         value: false
       }
     },
-
     observers: [
       '_moveScroll(page, shownItems)',
       '_resetShownItems(page)',
       '_updateShownItems(items, loading)',
       '_updateShowMore(shownItems.length, totalItems, loading)'
     ],
-
     /**
      * Creates a returns the listener for the Show More button that increases the page.
      *
@@ -237,13 +202,12 @@ Custom property                     | Description                               
       return {
         onClick: function() {
           if (self.showMore) {
-            console.log('page', page, self.page);
+            // console.log('show more is true', self.showMore, self.page);
             self.set('page', self.page + 1);
           }
         }
       };
     },
-
     /**
      * Creates a returns the text of the Show More button.
      *
@@ -272,7 +236,6 @@ Custom property                     | Description                               
         loadType
       );
     },
-
     /**
      * Moves the scroll to its start if the page is set to 1.
      *
@@ -280,34 +243,25 @@ Custom property                     | Description                               
      * @private
      */
     _moveScroll: function(page) {
-      var timeline = document.getElementById('searchTimeline');
-      console.log('this.$$', timeline);
-
       if (page === 1 && this.$$('#scrollThreshold')) {
         this.$$('#scrollThreshold').scroll(0, 0);
       }
-      if (timeline && this.$$('#scrollThreshold')) {
-        timeline.classList.remove('slideUp');
-        timeline.classList.add('slideDown');
-      } else {
-        timeline.classList.remove('slideDown');
-        timeline.classList.add('slideUp');
-      }
     },
-
     /**
      * Resets the shown items whenever the page is reset.
      *
      * @param {Number} page
      * @private
      */
-    _resetShownItems: function(page) {
+    _resetShownItems: function(page, oldValue) {
+      if (page === undefined) {
+        this.set('page', oldValue);
+      }
       // Redundancy needed for oddly ordered observable events.
       if (page === 1) {
         this.set('shownItems', []);
       }
     },
-
     /**
      * Updates the shown items to include the given input items.
      *
@@ -321,7 +275,6 @@ Custom property                     | Description                               
         if (this.page === 1) {
           this.set('shownItems', []);
         }
-
         var shownItems = (this.shownItems || [])
           .map(function(item) {
             return item;
@@ -331,11 +284,9 @@ Custom property                     | Description                               
               return item;
             })
           );
-
         this.set('shownItems', shownItems);
       }
     },
-
     /**
      * Updates whether more items can be shown.
      *
@@ -345,7 +296,6 @@ Custom property                     | Description                               
      * @private
      */
     _updateShowMore: function(totalShownItems, totalItems, loading) {
-      console.log('_updateShowMore', totalShownItems, totalItems, loading);
       if (_.isUndefined(totalShownItems) || _.isUndefined(totalItems)) {
         this.set('showMore', false);
         return;
